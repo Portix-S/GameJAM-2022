@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using StarterAssets;
 public class GunScript : MonoBehaviour
 {
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
@@ -37,6 +37,7 @@ public class GunScript : MonoBehaviour
     [Header("References")]
     public Camera fpsCam;
     public Transform attackPoint;
+    public FirstPersonController fpsControl;
 
     //GRAFICO
     public GameObject muzzleFlash;
@@ -59,8 +60,11 @@ public class GunScript : MonoBehaviour
 
     private void Update()
     {
-        MyInput();
-        ChooseWeapon();
+        if (!fpsControl.isOnHUD)
+        {
+            MyInput();
+            ChooseWeapon();
+        }
         //set ammo display
         if (ammoDisplay != null)
             ammoDisplay.SetText(bulletsLeft/bulletPerTap + "/" + totalAmmo/bulletPerTap);
@@ -71,9 +75,10 @@ public class GunScript : MonoBehaviour
     {
         //CHECAR SE PODE SENTA A PUA
         if (allowHold)
-            shooting = Input.GetButton("Fire1");
+            shooting = Input.GetKey(KeyCode.Mouse0);
         else
-            shooting = Input.GetButtonDown("Fire1");
+            shooting = Input.GetKeyDown(KeyCode.Mouse0);
+            //shooting = Input.GetButtonDown("Fire1");
 
         //RECARREGAR MANUAL
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading && totalAmmo > 0)
@@ -228,7 +233,7 @@ public class GunScript : MonoBehaviour
         allowHold = false;
         shootForce = 30f;
         shootingRate = 0.01f;
-        fireRate = 1f; // Verificar
+        fireRate = 3f; // Verificar
         spread = 0.8f;
         reloadTime = 3f;
         magazineSize = 120;
