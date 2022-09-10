@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LookAt : MonoBehaviour
 {
-
     public Transform target;
     public Sprite[] spriteList;
     private GameObject sprite;
@@ -28,10 +27,10 @@ public class LookAt : MonoBehaviour
 
         float angle = Vector3.SignedAngle(target.forward, transform.forward, transform.up);
         
-        if (angle >= -45 && angle < 45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[0]; Debug.Log("Back");}
-        else if (angle >= 45 && angle < 135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[1]; Debug.Log("Left");}
-        else if (angle >= 135 || angle < -135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[2]; Debug.Log("Front");}
-        else if (angle >= -135 && angle < -45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[3]; Debug.Log("Right");}
+        if (angle >= -45 && angle < 45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[0];}
+        else if (angle >= 45 && angle < 135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[1];}
+        else if (angle >= 135 || angle < -135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[2];}
+        else if (angle >= -135 && angle < -45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[3];}
 
     }
 }
