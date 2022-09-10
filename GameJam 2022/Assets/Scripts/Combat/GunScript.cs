@@ -25,7 +25,7 @@ public class GunScript : MonoBehaviour
     public int bulletPerTap; //quantas balas saem por clique
     public bool allowHold; //auto / semiauto
     int bulletsLeft, bulletsShot; //quantas balas tem
-    public int damage = 10; // Munição atual
+    public int damage = 10; // Muniï¿½ï¿½o atual
     public int smgDamage = 10;
     public int shotgunDamage = 8;
     public int pistolDamage = 20;
@@ -226,7 +226,7 @@ public class GunScript : MonoBehaviour
     private void ShotGun() // Arrumar para demonstrar quantidade corretamente
     {
         allowHold = false;
-        shootForce = 15f;
+        shootForce = 30f;
         shootingRate = 0.01f;
         fireRate = 1f; // Verificar
         spread = 0.8f;
@@ -234,6 +234,8 @@ public class GunScript : MonoBehaviour
         magazineSize = 120;
         bulletPerTap = 12;
         damage = shotgunDamage;
+
+        //Bullet.GetComponent<Rigidbody>
     }
 
 }
