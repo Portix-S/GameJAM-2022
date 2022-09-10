@@ -64,6 +64,9 @@ namespace StarterAssets
 		public float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
+		public bool isSprinting;
+		public bool isWalking;
+
 	
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
@@ -174,7 +177,21 @@ namespace StarterAssets
 				// creates curved result rather than a linear one giving a more organic speed change
 				// note T in Lerp is clamped, so we don't need to clamp our speed
 				_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
-
+				if(targetSpeed == SprintSpeed)
+				{
+					isSprinting = true;
+					isWalking = false;
+				}
+				else if(targetSpeed > 0.2f)
+				{
+					isWalking = true;
+					isSprinting = false;
+				}
+				else if(targetSpeed == 0f)
+				{
+					isSprinting = false;
+					isWalking = false;
+				}
 				// round speed to 3 decimal places
 				_speed = Mathf.Round(_speed * 1000f) / 1000f;
 			}

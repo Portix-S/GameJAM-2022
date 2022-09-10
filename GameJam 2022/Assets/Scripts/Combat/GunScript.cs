@@ -25,7 +25,7 @@ public class GunScript : MonoBehaviour
     public int bulletPerTap; //quantas balas saem por clique
     public bool allowHold; //auto / semiauto
     int bulletsLeft, bulletsShot; //quantas balas tem
-    public int damage = 10; // Munição atual
+    public int damage = 10; // Muniï¿½ï¿½o atual
     public int smgDamage = 10;
     public int shotgunDamage = 8;
     public int pistolDamage = 20;
@@ -71,9 +71,10 @@ public class GunScript : MonoBehaviour
     {
         //CHECAR SE PODE SENTA A PUA
         if (allowHold)
-            shooting = Input.GetButton("Fire1");
+            shooting = Input.GetKey(KeyCode.Mouse0);
         else
-            shooting = Input.GetButtonDown("Fire1");
+            shooting = Input.GetKeyDown(KeyCode.Mouse0);
+            //shooting = Input.GetButtonDown("Fire1");
 
         //RECARREGAR MANUAL
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading && totalAmmo > 0)
@@ -228,7 +229,7 @@ public class GunScript : MonoBehaviour
         allowHold = false;
         shootForce = 15f;
         shootingRate = 0.01f;
-        fireRate = 1f; // Verificar
+        fireRate = 3f; // Verificar
         spread = 0.8f;
         reloadTime = 3f;
         magazineSize = 120;
