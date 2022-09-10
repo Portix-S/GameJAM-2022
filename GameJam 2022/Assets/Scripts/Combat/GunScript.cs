@@ -231,7 +231,7 @@ public class GunScript : MonoBehaviour
     private void ShotGun() // Arrumar para demonstrar quantidade corretamente
     {
         allowHold = false;
-        shootForce = 15f;
+        shootForce = 30f;
         shootingRate = 0.01f;
         fireRate = 3f; // Verificar
         spread = 0.8f;
@@ -239,6 +239,8 @@ public class GunScript : MonoBehaviour
         magazineSize = 120;
         bulletPerTap = 12;
         damage = shotgunDamage;
+
+        //Bullet.GetComponent<Rigidbody>
     }
 
 }

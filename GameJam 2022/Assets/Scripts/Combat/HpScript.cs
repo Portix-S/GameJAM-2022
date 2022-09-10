@@ -9,7 +9,7 @@ public class HpScript : MonoBehaviour
 
     private int xpMax = 100;
 
-    [Header("Referências")]
+    [Header("ReferÃªncias")]
     public GameObject dropObject;
 
    
@@ -34,7 +34,7 @@ public class HpScript : MonoBehaviour
             playerScript.xp = 0;
             DropItem();
         }
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
     }
 
     private void DropItem()
