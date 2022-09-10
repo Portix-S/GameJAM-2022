@@ -67,6 +67,7 @@ namespace StarterAssets
 		public bool isSprinting;
 		public bool isWalking;
 
+		public bool isOnHUD = false;
 	
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
@@ -115,14 +116,18 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
-			Move();
+			if (!isOnHUD)
+			{
+				JumpAndGravity();
+				GroundedCheck();
+				Move();
+			}
 		}
 
 		private void LateUpdate()
 		{
-			CameraRotation();
+			if(!isOnHUD)
+				CameraRotation();
 		}
 
 		private void GroundedCheck()
@@ -170,28 +175,28 @@ namespace StarterAssets
 
 			float speedOffset = 0.1f;
 			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
-
+			if (targetSpeed == SprintSpeed)
+			{
+				isSprinting = true;
+				isWalking = false;
+			}
+			else if (targetSpeed > 0.2f)
+			{
+				isWalking = true;
+				isSprinting = false;
+			}
+			else if (targetSpeed <= 0.2f)
+			{
+				isSprinting = false;
+				isWalking = false;
+			}
 			// accelerate or decelerate to target speed
 			if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
 			{
 				// creates curved result rather than a linear one giving a more organic speed change
 				// note T in Lerp is clamped, so we don't need to clamp our speed
 				_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
-				if(targetSpeed == SprintSpeed)
-				{
-					isSprinting = true;
-					isWalking = false;
-				}
-				else if(targetSpeed > 0.2f)
-				{
-					isWalking = true;
-					isSprinting = false;
-				}
-				else if(targetSpeed == 0f)
-				{
-					isSprinting = false;
-					isWalking = false;
-				}
+				
 				// round speed to 3 decimal places
 				_speed = Mathf.Round(_speed * 1000f) / 1000f;
 			}

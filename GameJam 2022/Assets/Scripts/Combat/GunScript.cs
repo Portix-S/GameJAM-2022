@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using StarterAssets;
 public class GunScript : MonoBehaviour
 {
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
@@ -37,6 +37,7 @@ public class GunScript : MonoBehaviour
     [Header("References")]
     public Camera fpsCam;
     public Transform attackPoint;
+    public FirstPersonController fpsControl;
 
     //GRAFICO
     public GameObject muzzleFlash;
@@ -59,8 +60,11 @@ public class GunScript : MonoBehaviour
 
     private void Update()
     {
-        MyInput();
-        ChooseWeapon();
+        if (!fpsControl.isOnHUD)
+        {
+            MyInput();
+            ChooseWeapon();
+        }
         //set ammo display
         if (ammoDisplay != null)
             ammoDisplay.SetText(bulletsLeft/bulletPerTap + "/" + totalAmmo/bulletPerTap);

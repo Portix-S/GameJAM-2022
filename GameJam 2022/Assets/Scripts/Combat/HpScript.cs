@@ -11,6 +11,9 @@ public class HpScript : MonoBehaviour
 
     [Header("Referências")]
     public GameObject dropObject;
+
+   
+
     public void TakeDamage(int damage)
     {
         if (health >= damage)
