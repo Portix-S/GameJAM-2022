@@ -15,19 +15,26 @@ public class GunScript : MonoBehaviour
     public float shootForce;
 
     //CONSTITUICAO DA ARMA, GUN STATS
+    [Header("Gun Stats")]
     public float shootingRate; //tempo entre as disparadas
     public float fireRate; //tempo entre os tiros
     public float spread; //dispersao do tiro
     public float reloadTime; //tempo de recarregat
     public int magazineSize; //tamanho do pente
+    public int totalAmmo;
     public int bulletPerTap; //quantas balas saem por clique
     public bool allowHold; //auto / semiauto
     int bulletsLeft, bulletsShot; //quantas balas tem
+    public int damage = 10; // Munição atual
+    public int smgDamage = 10;
+    public int shotgunDamage = 8;
+    public int pistolDamage = 20;
     
     //Bools CHECKS
     public bool shooting, readyToShoot, reloading;
 
     //REFERENCES
+    [Header("References")]
     public Camera fpsCam;
     public Transform attackPoint;
 
@@ -47,16 +54,16 @@ public class GunScript : MonoBehaviour
         //TER CERTEZA SE O PENTE TA FULL
         bulletsLeft = magazineSize;
         readyToShoot = true;
-
+        totalAmmo = magazineSize * 5;
     }
 
     private void Update()
     {
         MyInput();
-
+        ChooseWeapon();
         //set ammo display
         if (ammoDisplay != null)
-            ammoDisplay.SetText(bulletsLeft/bulletPerTap + "/" + magazineSize/bulletPerTap);
+            ammoDisplay.SetText(bulletsLeft/bulletPerTap + "/" + totalAmmo/bulletPerTap);
         
     }
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
@@ -64,19 +71,19 @@ public class GunScript : MonoBehaviour
     {
         //CHECAR SE PODE SENTA A PUA
         if (allowHold)
-            shooting = Input.GetKey(KeyCode.Mouse0);
+            shooting = Input.GetButton("Fire1");
         else
             shooting = Input.GetButtonDown("Fire1");
 
         //RECARREGAR MANUAL
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading)
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading && totalAmmo > 0)
             Reload();
         //RECARGA AUTOMATICA
-        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0)
+        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0 && totalAmmo > 0)
             Reload();
 
         //ATIRANDO, SHOOTING
-        if (readyToShoot && shooting && !reloading && bulletsLeft>0)
+        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
         {
             //NAO ATIROU NENHUMA, ainda
             bulletsShot = 0;
@@ -116,10 +123,11 @@ public class GunScript : MonoBehaviour
         Vector3 directionNOSpread = targetPoint - attackPoint.position;
 
         //CALCULO DO SPREAD
-        float x = Random.Range(-spread, spread);
+        float x = Random.Range(-spread, spread); // Escalar com distancia?
         float y = Random.Range(-spread, spread);
+        float z = Random.Range(-spread, spread);
         //direcao com spread
-        Vector3 directionSpread = directionNOSpread + new Vector3(x,y,0);
+        Vector3 directionSpread = directionNOSpread + new Vector3(x,y,z);
 
         //INSTANCIAR A BALA, INSTANCIATE BULLET
         GameObject currentBullet = Instantiate(Bullet, attackPoint.position, Quaternion.identity);
@@ -166,10 +174,66 @@ public class GunScript : MonoBehaviour
 
     private void ReloadFinished()
     {
-        bulletsLeft = magazineSize;
+        if(totalAmmo > magazineSize || totalAmmo + bulletsLeft > magazineSize)
+        {
+            totalAmmo -= (magazineSize - bulletsLeft);
+            bulletsLeft = magazineSize;
+        }
+        else
+        {
+            bulletsLeft += totalAmmo;
+            totalAmmo = 0;
+        }
         reloading = false;
     }
 
+    private void ChooseWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            Pistol();
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            SMG();
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            ShotGun();
+    }
 
+    private void SMG()
+    {
+        allowHold = true;
+        shootForce = 20f;
+        shootingRate = 0.1f;
+        fireRate = 10f;
+        spread = 0.2f;
+        reloadTime = 2f;
+        magazineSize = 100;
+        bulletPerTap = 1;
+        damage = smgDamage;
+    }
+
+    private void Pistol()
+    {
+        allowHold = false;
+        shootForce = 18f;
+        shootingRate = 0.3f;
+        fireRate = 1f;
+        spread = 0.1f;
+        reloadTime = 1f;
+        magazineSize = 10;
+        bulletPerTap = 1;
+        damage = pistolDamage;
+    }
+
+    private void ShotGun() // Arrumar para demonstrar quantidade corretamente
+    {
+        allowHold = false;
+        shootForce = 15f;
+        shootingRate = 0.01f;
+        fireRate = 1f; // Verificar
+        spread = 0.8f;
+        reloadTime = 3f;
+        magazineSize = 120;
+        bulletPerTap = 12;
+        damage = shotgunDamage;
+    }
 
 }
