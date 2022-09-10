@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LookAt : MonoBehaviour
 {
-
     public Transform target;
     public Sprite[] spriteList;
     private GameObject sprite;
