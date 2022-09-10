@@ -8,6 +8,16 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float sight;
     [SerializeField] private float speed;
     [SerializeField] private float aggressionRange;
+    [SerializeField] private float fleeRange;
+
+    [Header("Shooting Settings")]
+    [SerializeField] private GameObject Bullet;
+    [SerializeField] private GameObject[] attackPoints; 
+    [SerializeField] private float[] dirMultiplier;
+    [SerializeField] private float shootingRate;
+    [SerializeField] private float shootForce;
+    private bool canShoot = true;
+
     private Transform target;
     private bool inCombat = false;
     private bool canSee = false;
@@ -29,22 +39,6 @@ public class EnemyManager : MonoBehaviour
         wanderTarget = transform.position + new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
     }
 
-
-    private void FixedUpdate() {
-        int layerMask = 1 << 8;
-        layerMask = ~layerMask;
-
-        RaycastHit hit;
-
-        Vector3 direction = target.position - transform.position;
-        if (Physics.Raycast(transform.position, direction, out hit, Mathf.Infinity)){
-
-            Debug.DrawRay(transform.position, direction*hit.distance, Color.yellow);
-            Debug.Log("Hit!");
-        }
-        else {Debug.DrawRay(transform.position, direction*1000, Color.red);Debug.Log("No hit");}
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -61,23 +55,23 @@ public class EnemyManager : MonoBehaviour
                 }
 
                 Move(wanderTarget);
-
                 break;
 
             case State.Chasing:
                 if (distance <= aggressionRange) {state = State.Combat;}
+
+                Move(target.position);
                 break;
+                
             case State.Combat:
-                Shoot();
+                if (distance >= fleeRange) {state = State.Chasing;}
+
+                if (canShoot) {Shoot();}
+                
+                transform.LookAt(target.position);
+                
                 break;
         }
-
-        
-        if (distance <= aggressionRange) {inCombat = true;}
-
-        if (!canSee) {Wander();}
-        if (canSee && !inCombat) {Move(target.position);}
-        else if (canSee && inCombat) {Shoot();}
     }
 
     void Move(Vector3 targetPosition){
@@ -91,15 +85,24 @@ public class EnemyManager : MonoBehaviour
 
     void Shoot(){
 
+        for (int i = 0; i < attackPoints.Length; i++)
+        {
+            Vector3 direction = attackPoints[i].transform.forward + attackPoints[i].transform.right*dirMultiplier[i];
+
+            //INSTANCIAR A BALA, INSTANCIATE BULLET
+            GameObject currentBullet = Instantiate(Bullet, attackPoints[i].transform.position, Quaternion.identity);
+            //rodar a bala na direcao correta
+            currentBullet.transform.forward = direction.normalized;
+
+            //ADD FORCES TO BULLET
+            currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * shootForce, ForceMode.Impulse);
+        }
+        canShoot = false;
+        Invoke("ResetShot", shootingRate + Random.Range(0, 1));
     }
 
-    void Aim(){
-
+    private void ResetShot()
+    {
+        canShoot = true;
     }
-
-    void Wander(){
-
-
-    }
-
 }

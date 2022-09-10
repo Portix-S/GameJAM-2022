@@ -7,6 +7,7 @@ public class DontGoThroughThings : MonoBehaviour
 	// Careful when setting this to true - it might cause double
 	// events to be fired - but it won't pass through the trigger
 	public bool sendTriggerMessage = false;
+	public string layer;
 
 	public LayerMask layerMask = -1; //make sure we aren't in this layer 
 	public float skinWidth = 0.1f; //probably doesn't need to be changed 
@@ -60,7 +61,7 @@ public class DontGoThroughThings : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Enemy")
+        if(collision.collider.tag == layer)
         {
 			GunScript gun = GameObject.FindGameObjectWithTag("Gun").GetComponent<GunScript>();
 			HpScript enemyHp = collision.collider.GetComponent<HpScript>();
