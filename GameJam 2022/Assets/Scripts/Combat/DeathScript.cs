@@ -13,5 +13,11 @@ public class DeathScript : MonoBehaviour
         fpsControl.isOnHUD = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene("Portix");
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Cursor.lockState = CursorLockMode.None;
     }
 }
