@@ -9,11 +9,6 @@ public class HpScript : MonoBehaviour
 
     private int xpMax = 100;
 
-    [Header("Referências")]
-    public GameObject dropObject;
-
-   
-
     public void TakeDamage(int damage)
     {
         if (health >= damage)
@@ -35,13 +30,14 @@ public class HpScript : MonoBehaviour
         if (playerScript.xp == xpMax) // Only Drop item when get max xp
         {
             playerScript.xp = 0;
-            DropItem();
+            int randomNum = Random.Range(0, playerScript.DropObjects.Length);
+            DropItem(playerScript.DropObjects[randomNum]);
         }
         Destroy(transform.parent.gameObject);
     }
 
-    private void DropItem()
+    private void DropItem(GameObject drop)
     {
-        Instantiate(dropObject, gameObject.transform.position, Quaternion.identity);
+        Instantiate(drop, gameObject.transform.position, Quaternion.identity);
     }
 }
