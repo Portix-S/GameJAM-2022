@@ -19,6 +19,8 @@ public class DontGoThroughThings : MonoBehaviour
 	private Rigidbody myRigidbody;
 	private Collider myCollider;
 
+	public int enemyBulletDamage = 10;
+
 
 	//initialize values 
 	void Start()
@@ -61,11 +63,17 @@ public class DontGoThroughThings : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == layer)
+        if(collision.collider.tag == "Enemy")
         {
 			GunScript gun = GameObject.FindGameObjectWithTag("Gun").GetComponent<GunScript>();
 			HpScript enemyHp = collision.collider.GetComponent<HpScript>();
 			enemyHp.TakeDamage(gun.damage);
+        }
+		else if(collision.collider.tag == "Player")
+        {
+			PlayerStats playerScript = collision.collider.GetComponentInParent<PlayerStats>();
+			playerScript.TakeDamage(enemyBulletDamage);
+			Destroy(gameObject);
         }
     }
 }

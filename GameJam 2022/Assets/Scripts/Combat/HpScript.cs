@@ -28,6 +28,9 @@ public class HpScript : MonoBehaviour
     private void Die()
     {
         PlayerStats playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        if(playerScript == null)
+            playerScript = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerStats>();
+
         playerScript.xp += xpDrop; // Adds xp to player
         if (playerScript.xp == xpMax) // Only Drop item when get max xp
         {
