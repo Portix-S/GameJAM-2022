@@ -56,6 +56,7 @@ public class GunScript : MonoBehaviour
         bulletsLeft = magazineSize;
         readyToShoot = true;
         totalAmmo = magazineSize * 5;
+        Pistol();
     }
 
     private void Update()
@@ -213,6 +214,8 @@ public class GunScript : MonoBehaviour
         magazineSize = 100;
         bulletPerTap = 1;
         damage = smgDamage;
+        fpsControl.MoveSpeed = 4f;
+        fpsControl.SprintSpeed = 8f;
     }
 
     private void Pistol()
@@ -226,6 +229,8 @@ public class GunScript : MonoBehaviour
         magazineSize = 10;
         bulletPerTap = 1;
         damage = pistolDamage;
+        fpsControl.MoveSpeed = 6f;
+        fpsControl.SprintSpeed = 10f;
     }
 
     private void ShotGun() // Arrumar para demonstrar quantidade corretamente
@@ -239,6 +244,8 @@ public class GunScript : MonoBehaviour
         magazineSize = 120;
         bulletPerTap = 12;
         damage = shotgunDamage;
+        fpsControl.MoveSpeed = 2f;
+        fpsControl.SprintSpeed = 4f;
 
         //Bullet.GetComponent<Rigidbody>
     }

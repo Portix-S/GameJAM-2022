@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using StarterAssets;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class PlayerStats : MonoBehaviour
     public TMP_Text healthText;
     public GameObject DeathHUD;
     public FirstPersonController fpsControl;
+    public Image healthImage;
+    public Sprite[] healthSprites;
 
     public GameObject[] DropObjects;
     private void Start()
@@ -26,6 +29,21 @@ public class PlayerStats : MonoBehaviour
         {
             TakeDamage(10);
         }
+        if(health > 90)
+            healthImage.sprite = healthSprites[0];
+        else if(health > 80)
+            healthImage.sprite = healthSprites[1];
+        else if(health > 60)
+            healthImage.sprite = healthSprites[2];
+        else if(health > 40)
+            healthImage.sprite = healthSprites[3];
+        else if (health > 30)
+            healthImage.sprite = healthSprites[4];
+        else if (health > 20)
+            healthImage.sprite = healthSprites[5];
+        else
+            healthImage.sprite = healthSprites[6];
+
     }
     public void TakeDamage(int damage)
     {
