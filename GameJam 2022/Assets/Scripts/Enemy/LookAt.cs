@@ -7,6 +7,7 @@ public class LookAt : MonoBehaviour
     public Transform target;
     public Sprite[] spriteList;
     private GameObject sprite;
+    public bool canChange;
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +26,13 @@ public class LookAt : MonoBehaviour
 
     void ChangeSprite(){
 
-        float angle = Vector3.SignedAngle(target.forward, transform.forward, transform.up);
+        if (canChange) {
+            float angle = Vector3.SignedAngle(target.forward, transform.forward, transform.up);
         
-        if (angle >= -45 && angle < 45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[0];}
-        else if (angle >= 45 && angle < 135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[1];}
-        else if (angle >= 135 || angle < -135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[2];}
-        else if (angle >= -135 && angle < -45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[3];}
-
+            if (angle >= -45 && angle < 45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[0];}
+            else if (angle >= 45 && angle < 135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[1];}
+            else if (angle >= 135 || angle < -135) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[2];}
+            else if (angle >= -135 && angle < -45) {sprite.GetComponent<SpriteRenderer>().sprite = spriteList[3];}
+        }
     }
 }
