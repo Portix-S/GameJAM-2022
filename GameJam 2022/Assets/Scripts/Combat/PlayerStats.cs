@@ -39,7 +39,7 @@ public class PlayerStats : MonoBehaviour
             healthImage.sprite = healthSprites[3];
         else if (health > 30)
             healthImage.sprite = healthSprites[4];
-        else if (health > 20)
+        else if (health > 10)
             healthImage.sprite = healthSprites[5];
         else
             healthImage.sprite = healthSprites[6];

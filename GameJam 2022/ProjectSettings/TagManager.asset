@@ -8,6 +8,8 @@ TagManager:
   - Bullet
   - Gun
   - Enemy
+  - HealthImage
+  - PowerUpText
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DamagePowerUp : MonoBehaviour
 {
@@ -9,11 +10,20 @@ public class DamagePowerUp : MonoBehaviour
         if (other.tag == "Player")
         {
             GunScript gun = GameObject.FindGameObjectWithTag("Gun").GetComponent<GunScript>();
-            gun.smgDamage += 5; 
             gun.pistolDamage += 5; 
-            gun.shotgunDamage += 1;
-            Destroy(gameObject);
+            gun.shotgunDamage += 2;
+            StartCoroutine(ShowText());
         }
+    }
+
+    IEnumerator ShowText()
+    {
+        TMP_Text text = GameObject.FindGameObjectWithTag("PowerUpText").GetComponent<TextMeshProUGUI>();
+        text.enabled = true;
+        text.SetText("+Dano");
+        yield return new WaitForSeconds(0.5f);
+        text.SetText(" ");
+        Destroy(gameObject);
     }
 
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class HealthPowerUp : MonoBehaviour
 {
@@ -13,7 +14,17 @@ public class HealthPowerUp : MonoBehaviour
             if (playerScript == null)
                 playerScript = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerStats>();
             playerScript.Heal(healAmount);
-            Destroy(gameObject);
+            StartCoroutine(ShowText());
         }
+    }
+
+    IEnumerator ShowText()
+    {
+        TMP_Text text = GameObject.FindGameObjectWithTag("PowerUpText").GetComponent<TextMeshProUGUI>();
+        text.enabled = true;
+        text.SetText("+Vida");
+        yield return new WaitForSeconds(0.5f);
+        text.SetText(" ");
+        Destroy(gameObject);
     }
 }
