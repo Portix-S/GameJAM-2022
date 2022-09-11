@@ -63,7 +63,7 @@ public class DontGoThroughThings : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Enemy")
+        if(collision.collider.tag == "Enemy" || collision.collider.tag == "FlyingEnemy")
         {
 			GunScript gun = GameObject.FindGameObjectWithTag("Gun").GetComponent<GunScript>();
 			HpScript enemyHp = collision.collider.GetComponent<HpScript>();

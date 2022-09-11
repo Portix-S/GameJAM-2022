@@ -17,6 +17,9 @@ public class PlayerStats : MonoBehaviour
     public Image healthImage;
     public Sprite[] healthSprites;
 
+    public int numberOfEnemies = 10;
+    public int killedEnemies;
+
     public GameObject[] DropObjects;
     private void Start()
     {
@@ -76,5 +79,18 @@ public class PlayerStats : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         DeathHUD.SetActive(true);
+        TMP_Text text = GameObject.FindGameObjectWithTag("EndGameText").GetComponent<TextMeshProUGUI>();
+        text.SetText("Você Morreu!");
+    }
+
+
+    public void WinGame()
+    {
+        fpsControl.isOnHUD = true;
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        DeathHUD.SetActive(true);
+        TMP_Text text = GameObject.FindGameObjectWithTag("EndGameText").GetComponent<TextMeshProUGUI>();
+        text.SetText("Você Completou o Jogo!");
     }
 }

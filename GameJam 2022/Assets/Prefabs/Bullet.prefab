@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 3026647494137943974}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.068, y: 0.9453, z: 1.7823}
-  m_LocalScale: {x: 0.04497907, y: 0.044979073, z: 0.13157614}
+  m_LocalScale: {x: 0.037425283, y: 0.037425287, z: 0.10947923}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -160,3 +160,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   skinWidth: 0.1
+  enemyBulletDamage: 10

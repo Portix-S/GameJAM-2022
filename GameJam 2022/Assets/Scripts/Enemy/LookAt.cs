@@ -14,12 +14,18 @@ public class LookAt : MonoBehaviour
     {
         sprite = transform.GetChild(0).gameObject;
     }
+    private void Awake()
+    {
+        if (tag == "Drop")
+            target = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<Transform>();
+    }
 
     // Update is called once per frame
     void Update()
     {
         if (target != null){
-            ChangeSprite();
+            if(tag != "Drop")
+                ChangeSprite();
             sprite.transform.LookAt(target);
         }   
     }
