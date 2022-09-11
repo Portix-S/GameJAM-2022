@@ -21,7 +21,8 @@ public class GunScript : MonoBehaviour
     public float spread; //dispersao do tiro
     public float reloadTime; //tempo de recarregat
     public int magazineSize; //tamanho do pente
-    public int totalAmmo;
+    public int totalShotgunAmmo;
+    public int totalPistolAmmo;
     public int bulletPerTap; //quantas balas saem por clique
     public bool allowHold; //auto / semiauto
     int bulletsLeft, bulletsShot; //quantas balas tem
@@ -29,6 +30,10 @@ public class GunScript : MonoBehaviour
     public int smgDamage = 10;
     public int shotgunDamage = 8;
     public int pistolDamage = 20;
+    public bool isOnPistol = false;
+    public bool isOnShotgun = true;
+    public int shotgunBullets;
+    public int pistolBullets;
     
     //Bools CHECKS
     public bool shooting, readyToShoot, reloading;
@@ -38,6 +43,7 @@ public class GunScript : MonoBehaviour
     public Camera fpsCam;
     public Transform attackPoint;
     public FirstPersonController fpsControl;
+    private GunAnimations gunAnimation;
 
     //GRAFICO
     public GameObject muzzleFlash;
@@ -53,10 +59,14 @@ public class GunScript : MonoBehaviour
     private void Awake()
     {
         //TER CERTEZA SE O PENTE TA FULL
-        bulletsLeft = magazineSize;
+        shotgunBullets = 12;
+        pistolBullets = 15;
+        bulletsLeft = shotgunBullets;
         readyToShoot = true;
-        totalAmmo = magazineSize * 5;
-        Pistol();
+        totalShotgunAmmo = shotgunBullets * 3;
+        totalPistolAmmo = pistolBullets * 3;
+        gunAnimation = gameObject.GetComponent<GunAnimations>();
+        ShotGun();
     }
 
     private void Update()
@@ -67,9 +77,12 @@ public class GunScript : MonoBehaviour
             ChooseWeapon();
         }
         //set ammo display
-        if (ammoDisplay != null)
-            ammoDisplay.SetText(bulletsLeft/bulletPerTap + "/" + totalAmmo/bulletPerTap);
-        
+        if (ammoDisplay != null && isOnPistol)
+            ammoDisplay.SetText(pistolBullets/bulletPerTap + "/" + totalPistolAmmo/bulletPerTap);
+        else if(ammoDisplay != null && isOnShotgun)
+            ammoDisplay.SetText(shotgunBullets / bulletPerTap + "/" + totalShotgunAmmo / bulletPerTap);
+
+
     }
     //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
     private void MyInput()
@@ -82,14 +95,17 @@ public class GunScript : MonoBehaviour
             //shooting = Input.GetButtonDown("Fire1");
 
         //RECARREGAR MANUAL
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading && totalAmmo > 0)
+        if (Input.GetKeyDown(KeyCode.R) && pistolBullets < magazineSize && !reloading && totalPistolAmmo > 0 && isOnPistol)
+            ReloadPistol();
+        else if (Input.GetKeyDown(KeyCode.R) && shotgunBullets < magazineSize && !reloading && totalShotgunAmmo > 0 && isOnShotgun)
             Reload();
         //RECARGA AUTOMATICA
-        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0 && totalAmmo > 0)
+        if (readyToShoot && shooting && !reloading && shotgunBullets <= 0 && totalShotgunAmmo > 0 && isOnShotgun)
             Reload();
-
+        else if (readyToShoot && shooting && !reloading && pistolBullets <= 0 && totalPistolAmmo > 0 && isOnPistol)
+            ReloadPistol();
         //ATIRANDO, SHOOTING
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot && shooting && !reloading && ((pistolBullets > 0 && isOnPistol) || (shotgunBullets > 0 && isOnShotgun)) )
         {
             //NAO ATIROU NENHUMA, ainda
             bulletsShot = 0;
@@ -144,11 +160,14 @@ public class GunScript : MonoBehaviour
         currentBullet.GetComponent<Rigidbody>().AddForce(directionSpread.normalized * shootForce, ForceMode.Impulse);
 
         //INSTANCIAR muzzleFlash
-        if (muzzleFlash != null)
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+        StartCoroutine(MuzzleFlash());
 
         //DESCONTAR DAS BALAS E MARCAR Q ATIROU
-        bulletsLeft--;
+        //bulletsLeft--;
+        if (isOnPistol)
+            pistolBullets--;
+        else if (isOnShotgun)
+            shotgunBullets--;
         bulletsShot++;
 
         //RESET DO SHOOT
@@ -175,22 +194,52 @@ public class GunScript : MonoBehaviour
     private void Reload()
     {
         reloading = true;
-        Invoke("ReloadFinished", reloadTime);
+        Invoke("ReloadShotgunFinished", reloadTime);
     }
 
-    private void ReloadFinished()
+    private void ReloadPistol()
     {
-        if(totalAmmo > magazineSize || totalAmmo + bulletsLeft > magazineSize)
+        reloading = true;
+        Invoke("ReloadPistolFinished", reloadTime);
+    }
+    private void ReloadShotgunFinished()
+    {
+        if(totalShotgunAmmo > magazineSize || totalShotgunAmmo + shotgunBullets > magazineSize)
         {
-            totalAmmo -= (magazineSize - bulletsLeft);
-            bulletsLeft = magazineSize;
+            Debug.Log("Reloading Shotgun");
+            totalShotgunAmmo -= (magazineSize - shotgunBullets);
+            //totalShotgunAmmo -= 10;
+            shotgunBullets = magazineSize;
         }
         else
         {
-            bulletsLeft += totalAmmo;
-            totalAmmo = 0;
+            shotgunBullets += totalShotgunAmmo;
+            totalShotgunAmmo = 0;
         }
         reloading = false;
+    }
+
+    private void ReloadPistolFinished()
+    {
+        if (totalPistolAmmo > magazineSize || totalPistolAmmo + pistolBullets > magazineSize)
+        {
+            Debug.Log("Reloading pistol");
+            totalPistolAmmo -= (magazineSize - pistolBullets);
+            pistolBullets = magazineSize;
+        }
+        else
+        {
+            pistolBullets += totalPistolAmmo;
+            totalPistolAmmo = 0;
+        }
+        reloading = false;
+    }
+
+    IEnumerator MuzzleFlash()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(0.05f);
+        muzzleFlash.SetActive(false);
     }
 
     private void ChooseWeapon()
@@ -198,8 +247,6 @@ public class GunScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
             Pistol();
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            SMG();
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
             ShotGun();
     }
 
@@ -231,6 +278,13 @@ public class GunScript : MonoBehaviour
         damage = pistolDamage;
         fpsControl.MoveSpeed = 6f;
         fpsControl.SprintSpeed = 10f;
+        isOnPistol = true;
+        isOnShotgun = false;
+        gunAnimation.gunIdle.SetActive(false);
+        gunAnimation.gunOnADS.SetActive(false);
+        gunAnimation.pistolIdle.SetActive(true);
+        attackPoint = gunAnimation.pistolFirePoint;
+        muzzleFlash = gunAnimation.pistolMuzzleFlash;
     }
 
     private void ShotGun() // Arrumar para demonstrar quantidade corretamente
@@ -240,14 +294,19 @@ public class GunScript : MonoBehaviour
         shootingRate = 0.01f;
         fireRate = 3f; // Verificar
         spread = 0.8f;
-        reloadTime = 3f;
-        magazineSize = 120;
-        bulletPerTap = 12;
+        reloadTime = 2f;
+        magazineSize = 12;
+        bulletPerTap = 4;
         damage = shotgunDamage;
-        fpsControl.MoveSpeed = 2f;
-        fpsControl.SprintSpeed = 4f;
-
-        //Bullet.GetComponent<Rigidbody>
+        fpsControl.MoveSpeed = 4f;
+        fpsControl.SprintSpeed = 8f;
+        isOnPistol = false;
+        isOnShotgun = true;
+        gunAnimation.gunIdle.SetActive(true);
+        gunAnimation.gunOnADS.SetActive(false);
+        gunAnimation.pistolIdle.SetActive(false);
+        attackPoint = gunAnimation.standardFirePoint;
+        muzzleFlash = gunAnimation.shotgunMuzzleFlash;
     }
 
 }
