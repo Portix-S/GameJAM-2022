@@ -57,7 +57,7 @@ public class GunAnimations : MonoBehaviour
 
             if (fpsController.isSprinting)
             {
-                animationSpeed = fpsController.SprintSpeed/2f;
+                animationSpeed = fpsController.SprintSpeed/1.5f;
                 amplitude = fpsController.SprintSpeed / 6f;
                 stoppedMoving = true;
             }

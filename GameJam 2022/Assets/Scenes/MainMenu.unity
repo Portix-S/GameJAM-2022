@@ -2221,20 +2221,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Integrantes:
-
-
-    Astolfo
-
-    Vitor
-
-    Cris
-
-    Orosco
-
-    Du
-
-    Felipe'
+  m_text: "Integrantes:\n\nJo\xE3o Pedro Imbriani Astolfo\nVitor Matheus da Silva\nPedro
+    Henrique Orosco de Camargo\nCristian C\xE9sar Martins\nEduardp Victor Rocha de
+    Souza\nFelipe Jos\xE9 Corr\xEAa"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
